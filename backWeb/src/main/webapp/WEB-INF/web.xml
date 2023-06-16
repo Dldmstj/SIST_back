@@ -1,20 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="https://jakarta.ee/xml/ns/jakartaee" xmlns:web="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd http://xmlns.jcp.org/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="4.0">
-  <servlet>
-    <description></description>
-    <display-name>servlet01</display-name>
-    <servlet-name>servlet01</servlet-name>
-    <servlet-class>backWeb.a01_servlet.A01_Servlet</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>servlet01</servlet-name>
-    <url-pattern>/servlet01</url-pattern>
-  </servlet-mapping>
-  
-  <!--
-  	프로젝트명/Servlet
- 	Servlet02:urlpattern
-  -->
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="https://jakarta.ee/xml/ns/jakartaee" xmlns:web="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd" version="4.0">
   <display-name>backWeb</display-name>
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>
@@ -24,64 +9,4 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
-  <servlet>
-    <description></description>
-    <display-name>servlet2</display-name>
-    <servlet-name>servlet2</servlet-name>
-    <servlet-class>backWeb.a01_servlet.A02_Servlet2</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>servlet2</servlet-name>
-    <url-pattern>/servlet2</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <description></description>
-    <display-name>htmlRendering</display-name>
-    <servlet-name>htmlRendering</servlet-name>
-    <servlet-class>backWeb.a01_servlet.A03_Servlet_html</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>htmlRendering</servlet-name>
-    <url-pattern>/htmlRendering</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <description></description>
-    <display-name>A04_Servlet_html</display-name>
-    <servlet-name>A04_Servlet_html</servlet-name>
-    <servlet-class>backWeb.a01_servlet.A04_Servlet_html</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>A04_Servlet_html</servlet-name>
-    <url-pattern>/A04_Servlet_html</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <description></description>
-    <display-name>htmlLandering2</display-name>
-    <servlet-name>htmlLandering2</servlet-name>
-    <servlet-class>backWeb.a01_servlet.A04_Servlet_html</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>htmlLandering2</servlet-name>
-    <url-pattern>/htmlLandering2</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <description></description>
-    <display-name>servlet00</display-name>
-    <servlet-name>servlet00</servlet-name>
-    <servlet-class>backWeb.a01_servlet.Z00_Servlet_html</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>servlet00</servlet-name>
-    <url-pattern>/servlet00</url-pattern>
-  </servlet-mapping>
-  <servlet>
-    <description></description>
-    <display-name>servlet001</display-name>
-    <servlet-name>servlet001</servlet-name>
-    <servlet-class>backWeb.a01_servlet.Z01_Servlet_html</servlet-class>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>servlet001</servlet-name>
-    <url-pattern>/servlet001</url-pattern>
-  </servlet-mapping>
 </web-app>

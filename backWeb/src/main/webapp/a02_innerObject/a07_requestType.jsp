@@ -33,7 +33,7 @@
 	if(str != null){
 		rad = Double.parseDouble(str);
 	}
-	out.print("<h2>"+rad+"</h2>")
+	out.print("<h2>"+rad+"</h2>");
 %>
 </body>
 </html>
