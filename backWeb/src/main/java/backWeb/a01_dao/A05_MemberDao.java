@@ -1,8 +1,11 @@
 package backWeb.a01_dao;
 
-import java.sql.*;
-import java.util.Date;
-import java.util.Scanner;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import backWeb.z01_vo.ShMember;
 
@@ -87,6 +90,46 @@ public class A05_MemberDao {
 		}
 	}
 	
+	// 로그인 처리 메서드 정의
+//	public List<ShMember> mlist() {
+//		List<ShMember> mlist = new ArrayList<ShMember>();
+//		String sql = "select * from member02 order by regdate desc";
+//		try {
+//			conn = DB2.conn();
+//			conn.setAutoCommit(false);
+//			
+//			pstmt = conn.prepareStatement(sql);
+//			rs = pstmt.executeQuery();
+//			
+//			if(rs.next()) {
+//				mem = new ShMember(
+//					rs.getString("id"),
+//					rs.getString ("pw"), 
+//					rs.getString ("name"), 
+//					rs.getInt ("point"), 
+//					rs.getString ("auth"), 
+//					rs.getDate ("regdate")
+//				);
+//			}
+//			
+//			conn.commit();
+//			pstmt.close();
+//			conn.close();
+//		} catch (SQLException e) {
+//			System.out.println("DB 예외: " + e.getMessage());
+//			try {
+//				conn.rollback();
+//			} catch (SQLException e1) {
+//				System.out.println("rollback 예외: " + e.getMessage());
+//			}
+//		}catch(Exception e) {
+//			System.out.println("기타 예외: " + e.getMessage());
+//		}finally {
+//			DB2.close(rs, pstmt, conn);
+//		}
+//		return mem;
+//	}
+
 	public static void main(String[] args) {
 
 		A05_MemberDao dao = new A05_MemberDao();
