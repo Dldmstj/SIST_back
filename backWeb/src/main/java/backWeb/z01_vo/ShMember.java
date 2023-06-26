@@ -12,7 +12,9 @@ public class ShMember {
  	
  	public ShMember() {}
  	
-	public ShMember(String id, String pw, String name, int point, String auth) {
+ 	public ShMember(String id) {}
+ 	
+ 	public ShMember(String id, String pw, String name, int point, String auth) {
 		this.id = id;
 		this.pw = pw;
 		this.name = name;

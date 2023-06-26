@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8"
+    import = "backWeb.z01_vo.Salgrade"
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -14,15 +16,40 @@
               정답입력이 맞을시, 정답 그렇지 않을시 오답이 처리되게 하세요. java+js 연동
  --%>
  <%
- int dan = (int)(Math.random()*8+2);
- int num = (int)(Math.random()*8+2);
- int gop = dan * num;
+String gradeS =request.getParameter("grade");
+ int grade = 0;
+ if(gradeS != null) grade = Integer.parseInt(gradeS);
+ 
+String losalS =request.getParameter("losal");
+ int losal = 0;
+ if(losalS != null) grade = Integer.parseInt(losalS);
+String hisalS =request.getParameter("hisal");
+ int hisal = 0;
+ if(hisalS != null) grade = Integer.parseInt(hisalS);
+ 
+ if(gradeS != null){
+	 Salgrade sal = new Salgrade(grade,losal,hisal);
+	 // log() : jsp단에서 서버의 log에 나올 출력 처리
+	 /* log(sal.getGrade());
+	 log(sal.getLosal());
+	 log(sal.getHisal()); */
+ }
  %>
 
 <body>
     <div class="container mt-3">
-    	<h2><%=dan %> X  <%=num %> = ?</h2>
+    	<h2>등급</h2>
     	<form method="post">
+         	<div class="mb-3 mt-3">
+            <label for="ans">정답입력:</label>
+            <input type="number" class="form-control" 
+      	     id="ans" placeholder="정답 입력" name="ans">
+         	</div>
+         	<div class="mb-3 mt-3">
+            <label for="ans">정답입력:</label>
+            <input type="number" class="form-control" 
+      	     id="ans" placeholder="정답 입력" name="ans">
+         	</div>
          	<div class="mb-3 mt-3">
             <label for="ans">정답입력:</label>
             <input type="number" class="form-control" 
@@ -32,15 +59,6 @@
      	</form>
     </div>
 </body>
-  <script type="text/javascript">
-  	var gop = "<%=gop%>"
-  	var ans = document.querySelector("#ans");
- 	function call01(){
-	 	if(ans.value == gop){
-	 		alert("정답")
-	 	}else{
-	 		alert("오답")
-	 	}
- 	}
+
  </script>
 </html>

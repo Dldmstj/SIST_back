@@ -15,6 +15,7 @@ import backWeb.z01_vo.Emp;
 import backWeb.z01_vo.Employee;
 import backWeb.z01_vo.Jobs;
 import backWeb.z01_vo.Locations;
+import backWeb.z01_vo.ShMember;
 
 /*
 	 # DAO(Database Access Object)
@@ -74,6 +75,68 @@ public class A04_PreParedDao {
 			DB2.close(rs, pstmt, conn);
 		}
 		return elist;
+	}
+	public List<Emp> getEmp(){
+		List<Emp> elist = new ArrayList<Emp>();
+		String sql = "SELECT * FROM Emp02 order by empno";
+		try {
+			conn = DB2.conn();
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				elist.add(new Emp(
+						rs.getInt("empno"),
+						rs.getString("ename"),
+						rs.getString("job"),
+						rs.getInt("mgr"),
+						rs.getDate("hiredate"),
+						rs.getDouble("sal"),
+						rs.getDouble("comm"),
+						rs.getInt("deptno")
+						));
+			}
+			rs.close();
+			pstmt.close();
+			conn.close();
+			
+		}catch(SQLException e) {
+			System.out.println("DB에러: " + e.getMessage());
+		}catch(Exception e) {
+			System.out.println("기타예외: " + e.getMessage());
+		}finally {
+			DB2.close(rs, pstmt, conn);
+		}
+		return elist;
+	}
+	
+	public int getMemberid(String id){
+		int result = -1;
+		ShMember member = null;
+		String sql = "SELECT * FROM member01 where memid = ?";
+		try {
+			conn = DB2.conn();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, id);
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				result = 1;
+				
+			}else{
+				result = 0;
+			}			
+			rs.close();
+			pstmt.close();
+			conn.close();
+			
+		}catch(SQLException e) {
+			System.out.println("DB에러: " + e.getMessage());
+		}catch(Exception e) {
+			System.out.println("기타예외: " + e.getMessage());
+		}finally {
+			DB2.close(rs, pstmt, conn);
+		}
+		System.out.println(result);
+		return result;
 	}
 	
 	public List<Department> getDepartList(Map<String, String> sch){
@@ -362,6 +425,40 @@ public class A04_PreParedDao {
 		return emp;
 	}
 
+	public List<Emp> getEmpList(String ename, String job) {
+	    List<Emp> elist = new ArrayList<>();
+	    String sql = "SELECT * FROM emp02 where ename like ? and job like ? order by empno ";
+	    
+	    try {
+	        conn = DB2.conn();
+	        pstmt = conn.prepareStatement(sql);
+	        pstmt.setString(1, '%'+ename+"%");
+	        pstmt.setString(2, '%'+job+"%");
+	        rs = pstmt.executeQuery();
+	        
+	
+	        while (rs.next()) {
+	            elist.add(new Emp(
+	                    rs.getInt("empno"),
+	                    rs.getString("ename"),
+	                    rs.getString("job"),
+	                    rs.getInt("mgr"),
+	                    rs.getDate("hiredate"),
+	                    rs.getDouble("sal"),
+	                    rs.getDouble("comm"),
+	                    rs.getInt("deptno")
+	            ));
+	        }
+	    } catch (SQLException e) {
+	        System.out.println("DB 관련 오류: " + e.getMessage());
+	    } catch (Exception e) {
+	        System.out.println("일반 오류: " + e.getMessage());
+	    } finally {
+	        DB2.close(rs, pstmt, conn);
+	    }
+	    return elist;
+	}
+	
 	public static void main(String[] args) {
 		A04_PreParedDao dao = new A04_PreParedDao();
 		Map<String, String> emp = new HashMap<String, String>();

@@ -47,10 +47,14 @@
 					// 회원정보 등록이 가능하도록 할 때 필요
 				btnObj.value="유효성 확인 완료";
 			}
-	    	var btnObj = document.querySelector("#btn01");
+			
+			// # 버튼으로 submit 처리하는 방법
+	    	/* var btnObj = document.querySelector("#btn01"); */
 	    	btnObj.click=function(){
 	    		// 코드로 전송 처리
+	    		// 전송 전에 유효성 처리 가능/로직처리 가능
 	    		document.querySelector("form").submit();
+	    		// submit 버튼 없이 submit 처리하는 방법
 	    	}
 		</script>
     </div>
