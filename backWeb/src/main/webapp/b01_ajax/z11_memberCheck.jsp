@@ -5,7 +5,7 @@
     pageEncoding="UTF-8"
     
 %>
-<%
+<% // ?id=himan
 String id =request.getParameter("id");
 
 if(id==null) id="";

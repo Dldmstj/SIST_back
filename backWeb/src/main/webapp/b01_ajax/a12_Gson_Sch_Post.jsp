@@ -19,6 +19,13 @@
 		요청 body에 따로 요청값을 처리하기 때문에
 		xhr.open("post",page,true)
 		xhr.setRequestHeader("Content-type", "application/x-www.form-urlencoded"
+		클라이언트 => 서버
+			1) form데이터(query string)을 전송할 때 사용하는 option
+		기타 옵션
+			1) multipart/form-data : 파일 업로드할 때 사용하는 옵션(binary)
+			2) application/json : json데이터로 전송시 사용
+			3) text/plain : 일반 데이터를 인코딩하지 않고 전송
+		
 		xhr.send("key=val&...")
 		으로 코드를 변경하여야 한다.
 		

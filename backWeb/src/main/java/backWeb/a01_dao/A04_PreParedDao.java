@@ -124,6 +124,37 @@ public class A04_PreParedDao {
 		return elist;
 	}
 	
+	public List<Code> getCodeList(String title, int refno) {
+		List<Code> elist = new ArrayList<Code>();
+		String sql = "SELECT *\r\n"
+				+ "FROM CODE\r\n"
+				+ "WHERE title LIKE ?\r\n"
+				+ "START WITH refno = ?\r\n"
+				+ "CONNECT BY PRIOR NO = refno";
+		try {
+			conn = DB2.conn();
+			pstmt = conn.prepareStatement(sql); 
+			pstmt.setString(1,'%'+title+'%');
+			pstmt.setInt(2,refno);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				elist.add(new Code(
+						rs.getInt("no"),
+						rs.getString("title"),
+						rs.getInt("refno"),
+						rs.getInt("ordno")
+						));
+			}
+		} catch (SQLException e) {
+			System.out.println("DB 관련 오류: " + e.getMessage());
+		} catch (Exception e) {
+			System.out.println("일반 오류: " + e.getMessage());
+		} finally {
+			DB2.close(rs, pstmt, conn);
+		}
+		return elist;
+	}
+	
 	public List<Employee> getEmpList(Map<String, String> sch){
 		List<Employee> elist = new ArrayList<Employee>();
 		String sql = "SELECT * FROM Employees WHERE FIRST_NAME||LAST_NAME LIKE '%'||?||'%' "

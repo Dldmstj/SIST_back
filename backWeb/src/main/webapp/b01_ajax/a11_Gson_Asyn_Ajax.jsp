@@ -16,8 +16,8 @@
 	1) 화면을 dao의 객체 tr/td로 만드는데
 	2) json데이터로 만들어서 전송하는 경우가 일반적이다.
 		Person						=>	{"name":"홍길동",
-										 "age":25,
-			private name/age/loc;		 "loc":"서울"}
+										 "age":25, "loc":"서울"}
+										 
 	3) Gson lib는 이것을 자동으로 처리해주는 패키지 class이다
 	
 	# 처리 순서
@@ -38,9 +38,11 @@
 		1) 화면 구현
 			id [	] [등록여부확인] 	=> 클릭시 이벤트 핸들러
 		2) 이벤트 핸들러 함수
+			// 비동기 통신시, onreadystatechange 기능메서드 활용이 어렵다.
+			// 단, setTimeout() 활용하면 가능하다.
 			function asynAjx(){
 				xhr.open("get",page,true)
-				xhr.onreadystatechage=function(){		// 비동기식
+				xhr.onreadystatechage=function(){
 					if(xhr.status==200&&xhr.readyState==4{
 						return xhr.responseText;
 					}
