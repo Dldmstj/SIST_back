@@ -14,7 +14,20 @@ public class ShMember {
  	
  	public ShMember(String id) {}
  	
- 	public ShMember(String id, String pw, String name, int point, String auth) {
+ 	public ShMember(String name, String id) {
+ 		this.id = id;
+ 		this.name = name;
+ 	}
+ 	
+ 	public ShMember(String id, String pw, String name, String auth, int point) {
+		this.id = id;
+		this.pw = pw;
+		this.name = name;
+		this.auth = auth;
+		this.point = point;
+	}
+
+	public ShMember(String id, String pw, String name, int point, String auth) {
 		this.id = id;
 		this.pw = pw;
 		this.name = name;

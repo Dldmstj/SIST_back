@@ -9,12 +9,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import backWeb.z01_vo.Code;
 import backWeb.z01_vo.Department;
 import backWeb.z01_vo.Department01;
+import backWeb.z01_vo.Dept;
 import backWeb.z01_vo.Emp;
 import backWeb.z01_vo.Employee;
+import backWeb.z01_vo.Job;
 import backWeb.z01_vo.Jobs;
 import backWeb.z01_vo.Locations;
+import backWeb.z01_vo.Manager;
 import backWeb.z01_vo.ShMember;
 
 /*
@@ -31,10 +35,95 @@ public class A04_PreParedDao {
 	private Connection conn;
 	private PreparedStatement pstmt;
 	private ResultSet rs;
-	/*
-	 select * from Employees
-	WHERE FIRST_NAME || LAST_NAME LIKE '%'||?||'%' AND SALARY BETWEEN ? AND ?; 
-	 */
+	
+	public List<Manager> getManager() {
+	    List<Manager> elist = new ArrayList<Manager>();
+	    String sql = "SELECT empno, ename, dname\r\n"
+	    		+ "	FROM emp e, dept d\r\n"
+	    		+ "	WHERE e.deptno = d.deptno\r\n"
+	    		+ "	AND empno in (\r\n"
+	    		+ "	   SELECT DISTINCT mgr FROM emp\r\n"
+	    		+ "	) order by ename ";
+	    System.out.println("# DB 접속 #");
+	    try {
+	        conn = DB2.conn();
+	        pstmt = conn.prepareStatement(sql); 
+	        rs = pstmt.executeQuery();
+	        while (rs.next()) {
+	        	// empno, ename, dname
+	            elist.add(new Manager(
+	                    rs.getInt("empno"),
+	                    rs.getString("ename"),
+	                    rs.getString("dname")
+	            ));
+	        }
+	    } catch (SQLException e) {
+	        System.out.println("DB 관련 오류: " + e.getMessage());
+	    } catch (Exception e) {
+	        System.out.println("일반 오류: " + e.getMessage());
+	    } finally {
+	        DB2.close(rs, pstmt, conn);
+	    }
+	    return elist;
+	}
+	
+	public List<Job> getJobs() {
+	    List<Job> elist = new ArrayList<Job>();
+	    String sql = "	SELECT * \r\n"
+	    		+ "	FROM jobs\r\n"
+	    		+ "	ORDER BY job_title ";
+	    System.out.println("# DB 접속 #");
+	    try {
+	        conn = DB2.conn();
+	        pstmt = conn.prepareStatement(sql); 
+	        rs = pstmt.executeQuery();
+	        //job_id, job_title, min_salary, max_salary
+	        while (rs.next()) {
+	        	elist.add(new Job(
+	        			rs.getString("job_id"),
+	        			rs.getString("job_title"),
+	        			rs.getInt("min_salary"),
+	        			rs.getInt("max_salary")
+	            ));
+	        }
+	    } catch (SQLException e) {
+	        System.out.println("DB 관련 오류: " + e.getMessage());
+	    } catch (Exception e) {
+	        System.out.println("일반 오류: " + e.getMessage());
+	    } finally {
+	        DB2.close(rs, pstmt, conn);
+	    }
+	    return elist;
+	}
+	
+	public List<Code> getCodeList(String title) {
+		List<Code> elist = new ArrayList<Code>();
+		String sql = "SELECT NO, title, refno, ordno\r\n"
+				+ "FROM CODE WHERE title LIKE ?\r\n"
+				+ "ORDER BY refno, ordno";
+		try {
+			conn = DB2.conn();
+			pstmt = conn.prepareStatement(sql); 
+			pstmt.setString(1, title);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				elist.add(new Code(
+						rs.getInt("no"),
+						rs.getString("title"),
+						rs.getInt("refno"),
+						rs.getInt("ordno")
+						));
+			}
+		} catch (SQLException e) {
+			System.out.println("DB 관련 오류: " + e.getMessage());
+		} catch (Exception e) {
+			System.out.println("일반 오류: " + e.getMessage());
+		} finally {
+			DB2.close(rs, pstmt, conn);
+		}
+		return elist;
+	}
+	
 	public List<Employee> getEmpList(Map<String, String> sch){
 		List<Employee> elist = new ArrayList<Employee>();
 		String sql = "SELECT * FROM Employees WHERE FIRST_NAME||LAST_NAME LIKE '%'||?||'%' "
@@ -76,6 +165,37 @@ public class A04_PreParedDao {
 		}
 		return elist;
 	}
+	public List<Emp> getEmpList() {
+	    List<Emp> elist = new ArrayList<>();
+	    String sql = "SELECT * FROM emp02 order by empno";
+	    
+	    try {
+	        conn = DB2.conn();
+	        pstmt = conn.prepareStatement(sql); 
+	        rs = pstmt.executeQuery();
+	
+	        while (rs.next()) {
+	            elist.add(new Emp(
+	                    rs.getInt("empno"),
+	                    rs.getString("ename"),
+	                    rs.getString("job"),
+	                    rs.getInt("mgr"),
+	                    rs.getDate("hiredate"),
+	                    rs.getDouble("sal"),
+	                    rs.getDouble("comm"),
+	                    rs.getInt("deptno")
+	            ));
+	        }
+	    } catch (SQLException e) {
+	        System.out.println("DB 관련 오류: " + e.getMessage());
+	    } catch (Exception e) {
+	        System.out.println("일반 오류: " + e.getMessage());
+	    } finally {
+	        DB2.close(rs, pstmt, conn);
+	    }
+	    return elist;
+	}
+	
 	public List<Emp> getEmp(){
 		List<Emp> elist = new ArrayList<Emp>();
 		String sql = "SELECT * FROM Emp02 order by empno";
@@ -139,6 +259,35 @@ public class A04_PreParedDao {
 		return result;
 	}
 	
+	public ShMember getMemberLogin(String id, String pw){
+		ShMember member = null;
+		String sql = "SELECT * FROM member01 where memid = ? and mempw = ?";
+		try {
+			conn = DB2.conn();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, id);
+			pstmt.setString(2, pw);
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				member = new ShMember(
+						rs.getString("memname"),
+						rs.getString("memid")
+						);
+			}	
+			rs.close();
+			pstmt.close();
+			conn.close();
+			
+		}catch(SQLException e) {
+			System.out.println("DB에러: " + e.getMessage());
+		}catch(Exception e) {
+			System.out.println("기타예외: " + e.getMessage());
+		}finally {
+			DB2.close(rs, pstmt, conn);
+		}
+		return member;
+	}
+	
 	public List<Department> getDepartList(Map<String, String> sch){
 		List<Department> dlist = new ArrayList<Department>();
 		String sql = "SELECT * FROM JOB_HISTORY WHERE JOB_ID LIKE '%'||?||'%' "
@@ -148,7 +297,7 @@ public class A04_PreParedDao {
 			// 초기에 sql을 넘기면서 pstmt 객체 생성
 			pstmt = conn.prepareStatement(sql);
 			// pstmt.set데이터유형(순서-1부터, 입력할 데이터)
-			pstmt.setString(1, sch.get("job_id"));	// name 	minSal 	maxSal
+			pstmt.setString(1, sch.get("name"));	// name 	minSal 	maxSal
 			pstmt.setInt(2, Integer.parseInt(sch.get("min")));
 			pstmt.setInt(3, Integer.parseInt(sch.get("max")));
 			rs = pstmt.executeQuery();
@@ -459,6 +608,60 @@ public class A04_PreParedDao {
 	    return elist;
 	}
 	
+	public List<Dept> getDeptList(String dname, String loc) {
+		List<Dept> dlist = new ArrayList<>();
+		String sql = "SELECT * FROM dept where dname like ? and loc like ? order by deptno";
+		
+		try {
+			conn = DB2.conn();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, '%'+dname+"%");
+			pstmt.setString(2, '%'+loc+"%");
+			rs = pstmt.executeQuery();
+			
+			
+			while (rs.next()) {
+				dlist.add(new Dept(
+						rs.getInt("deptno"),
+						rs.getString("dname"),
+						rs.getString("loc")
+						));
+			}
+		} catch (SQLException e) {
+			System.out.println("DB 관련 오류: " + e.getMessage());
+		} catch (Exception e) {
+			System.out.println("일반 오류: " + e.getMessage());
+		} finally {
+			DB2.close(rs, pstmt, conn);
+		}
+		return dlist;
+	}
+	
+	public void insertCode(Code ins) {
+		String sql = "INSERT INTO code values(code_seq.nextval,?,?,?,?);";
+		try {
+			conn = DB2.conn();
+			conn.setAutoCommit(false);		// 자동 commit 방지
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, ins.getTitle());
+			pstmt.setInt(2, ins.getRefno());
+			pstmt.setInt(3, ins.getOrdno());
+			pstmt.setString(4, ins.getVal());
+			int result = pstmt.executeUpdate();
+	        if (result == 1) {
+	            conn.commit();
+	            System.out.println("등록 성공");
+	        }
+	    } catch (SQLException e) {
+	        System.out.println("DB 오류: " + e.getMessage());
+	        DB2.rollback(conn);
+	    } catch (Exception e) {
+	        System.out.println("일반 오류: " + e.getMessage());
+	    } finally {
+	        DB2.close(rs, pstmt, conn);
+	    }
+	}
+
 	public static void main(String[] args) {
 		A04_PreParedDao dao = new A04_PreParedDao();
 		Map<String, String> emp = new HashMap<String, String>();

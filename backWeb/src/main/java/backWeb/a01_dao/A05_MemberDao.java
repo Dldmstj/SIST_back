@@ -130,6 +130,47 @@ public class A05_MemberDao {
 //		return mem;
 //	}
 
+	// 로그인 처리 메서드 정의
+	public ShMember checkMem(String id) {
+		ShMember mem = null;
+		String sql = "select * from member02 where id= ?";
+		try {
+			conn = DB2.conn();
+			conn.setAutoCommit(false);
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, id);
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				mem = new ShMember(
+					rs.getString("id"),
+					rs.getString ("pw"), 
+					rs.getString ("name"), 
+					rs.getInt ("point"), 
+					rs.getString ("auth"), 
+					rs.getDate ("regdate")
+				);
+			}
+			
+			conn.commit();
+			pstmt.close();
+			conn.close();
+		} catch (SQLException e) {
+			System.out.println("DB 예외: " + e.getMessage());
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				System.out.println("rollback 예외: " + e.getMessage());
+			}
+		}catch(Exception e) {
+			System.out.println("기타 예외: " + e.getMessage());
+		}finally {
+			DB2.close(rs, pstmt, conn);
+		}
+		return mem;
+	}
+
 	public static void main(String[] args) {
 
 		A05_MemberDao dao = new A05_MemberDao();

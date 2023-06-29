@@ -97,4 +97,14 @@ public class DB2 {
 		}
 	}
 
+	public static void rollback(Connection conn) {
+		if (conn != null) {
+            try {
+                conn.rollback();
+            } catch (SQLException e) {
+                System.out.println("롤백 예외: " + e.getMessage());
+            }
+        }
+	}
+
 }
