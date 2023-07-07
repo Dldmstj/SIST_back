@@ -63,29 +63,6 @@ public class DB2 {
 		if(rs!=null) rs = null;		
 		if(stmt!=null) stmt = null;		
 		if(conn!=null) conn = null;		// 강제로 null처리
-		/* try {
-				if(rs!=null)
-						rs.close();	
-					// 위 rs.close()가 없이
-					// close()가 작동문제로 예외가 발생했을 때는
-					// rs의 자원은 영원히 예외가 발생하지 않으면
-				}catch (SQLException e) {
-					System.out.println(e.getMessage());
-				}
-				try {
-					if(stmt!=null)
-						rs.close();
-				}catch (SQLException e) {
-					System.out.println(e.getMessage());
-				}
-				try {
-					if(conn!=null)
-						rs.close();
-				}catch (SQLException e) {
-					System.out.println(e.getMessage());
-				}
-				System.out.println("자원해제 완료!");
-		 */
 	}
 	public static void main(String[] args) {
 		try {

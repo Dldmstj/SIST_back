@@ -3,11 +3,12 @@ package backWeb.a01_servlet;
 import java.io.IOException;
 import java.io.Writer;
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import backWeb.a01_dao.A04_PreParedDao;
 import backWeb.z01_vo.Code;
 
 /**
@@ -37,6 +38,7 @@ public class A06_CodeInsert extends HttpServlet {
 		System.out.println(refno);
 		System.out.println(ordno);
 		System.out.println(val);
+		String prn="N";
 		if(title!=null) {
 			Code ins = new Code(
 					0,
@@ -44,8 +46,11 @@ public class A06_CodeInsert extends HttpServlet {
 					val,
 					Integer.parseInt(refno),
 					Integer.parseInt(ordno));
+			A04_PreParedDao dao = new A04_PreParedDao();
+			dao.insertCode(ins);
+			prn="Y";
 		}
-		response.getWriter().print("call servlet!");
+		response.getWriter().print(prn);
 	}
 
 }

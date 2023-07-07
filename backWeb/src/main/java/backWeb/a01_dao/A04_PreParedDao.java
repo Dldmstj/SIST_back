@@ -669,18 +669,19 @@ public class A04_PreParedDao {
 	}
 	
 	public void insertCode(Code ins) {
-		String sql = "INSERT INTO code values(code_seq.nextval,?,?,?,?);";
-		try {
-			conn = DB2.conn();
-			conn.setAutoCommit(false);		// 자동 commit 방지
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, ins.getTitle());
-			pstmt.setInt(2, ins.getRefno());
-			pstmt.setInt(3, ins.getOrdno());
-			pstmt.setString(4, ins.getVal());
-			int result = pstmt.executeUpdate();
+		String sql = "INSERT INTO code VALUES"
+	    		+ " (code_seq.nextval, ?,?,?,?)";
+	    try {
+	    	conn = DB2.conn();
+	        conn.setAutoCommit(false);
+	        pstmt = conn.prepareStatement(sql);
+	        pstmt.setString(1, ins.getTitle());
+	        pstmt.setInt(2, ins.getRefno());
+	        pstmt.setInt(3, ins.getOrdno());
+	        pstmt.setString(4, ins.getVal());
+	        int result = pstmt.executeUpdate();
 	        if (result == 1) {
-	            conn.commit();
+	        	conn.commit();
 	            System.out.println("등록 성공");
 	        }
 	    } catch (SQLException e) {
@@ -689,8 +690,148 @@ public class A04_PreParedDao {
 	    } catch (Exception e) {
 	        System.out.println("일반 오류: " + e.getMessage());
 	    } finally {
+	    	DB2.close(rs, pstmt, conn);
+	    }
+	}
+
+	public Code getCode(int no) {
+		Code c = null;
+	    String sql = " SELECT * \r\n"
+	    		+ "FROM code\r\n"
+	    		+ "WHERE NO = ?";
+	    try {
+	        conn = DB2.conn();
+	        pstmt = conn.prepareStatement(sql);
+	        pstmt.setInt(1, no);
+	        rs = pstmt.executeQuery();
+	        if (rs.next()) {
+	            c = new Code(
+	                    rs.getInt("no"),
+	                    rs.getString("title"),
+	                    rs.getString("val"),
+	                    rs.getInt("refno"),
+	                    rs.getInt("ordno")
+	            );
+	        }
+	    } catch (SQLException e) {
+	        System.out.println("DB 관련 오류: " + e.getMessage());
+	    } catch (Exception e) {
+	        System.out.println("일반 오류: " + e.getMessage());
+	    } finally {
 	        DB2.close(rs, pstmt, conn);
 	    }
+	    return c;
+	}
+
+	public void updateCode(Code upt) {
+		String sql = "UPDATE code\r\n"
+	    		+ "    SET title = ?,\r\n"
+	    		+ "        refno = ?,\r\n"
+	    		+ "        ordno = ?,\r\n"
+	    		+ "        val = ?\r\n"
+	    		+ "   WHERE NO = ?";
+	    try {
+	    	conn = DB2.conn();
+	    	conn.setAutoCommit(false);
+	        pstmt = conn.prepareStatement(sql);
+	        pstmt.setString(1, upt.getTitle());
+	        pstmt.setInt(2, upt.getRefno());
+	        pstmt.setInt(3, upt.getOrdno());
+	        pstmt.setString(4, upt.getVal());
+	        pstmt.setInt(5, upt.getNo());
+	        int result = pstmt.executeUpdate();
+	        if (result == 1) {
+	        	conn.commit();
+	            System.out.println("수정 성공");
+	        }
+	    } catch (SQLException e) {
+	        System.out.println("DB 오류: " + e.getMessage());
+	        DB2.rollback(conn);
+	    } catch (Exception e) {
+	        System.out.println("일반 오류: " + e.getMessage());
+	    } finally {
+	    	DB2.close(rs, pstmt, conn);
+	    }
+	}
+
+	public void deleteCode(int no) {
+		 String sql = "delete\r\n"
+		    		+ "FROM code\r\n"
+		    		+ "WHERE NO = ?";
+		    try {
+		    	conn = DB2.conn();
+		        conn.setAutoCommit(false);
+		        pstmt = conn.prepareStatement(sql);
+		        pstmt.setInt(1, no);
+		        int result = pstmt.executeUpdate();
+		        if (result == 1) {
+		        	conn.commit();
+		            System.out.println("삭제 성공");
+		        }
+		    } catch (SQLException e) {
+		        System.out.println("DB 오류: " + e.getMessage());
+		        DB2.rollback(conn);
+		    } catch (Exception e) {
+		        System.out.println("일반 오류: " + e.getMessage());
+		    } finally {
+		    	DB2.close(rs, pstmt, conn);
+		    }
+	}
+
+	public Dept getDept(int no) {
+		Dept d = new Dept(0,"","");	// 데이터 없으면 대체될 default 객체
+	    String sql = " SELECT * \r\n"
+	    		+ "FROM dept\r\n"
+	    		+ "WHERE deptno = ?";
+	    try {
+	        conn = DB2.conn();
+	        pstmt = conn.prepareStatement(sql);
+	        pstmt.setInt(1, no);
+	        rs = pstmt.executeQuery();
+	        if (rs.next()) {
+	            d = new Dept(
+	                    rs.getInt("deptno"),
+	                    rs.getString("dname"),
+	                    rs.getString("loc")
+	            );
+	        }
+	    } catch (SQLException e) {
+	        System.out.println("DB 관련 오류: " + e.getMessage());
+	    } catch (Exception e) {
+	        System.out.println("일반 오류: " + e.getMessage());
+	    } finally {
+	        DB2.close(rs, pstmt, conn);
+	    }
+	    return d;
+	}
+	public Job getJobs(String job_id) {
+	    Job job = new Job("","",0,0);
+	    String sql = "	SELECT * \r\n"
+	    		+ "FROM jobs\r\n"
+	    		+ "WHERE JOB_ID = ? ";
+	    System.out.println("# DB 접속 #");
+	    try {
+	        conn = DB2.conn();
+	        pstmt = conn.prepareStatement(sql); 
+	        pstmt.setString(1, job_id);; 
+	        rs = pstmt.executeQuery();
+	        //job_id, job_title, min_salary, max_salary
+	        if (rs.next()) {
+	        	job = new Job(
+	        			rs.getString("job_id"),
+	        			rs.getString("job_title"),
+	        			rs.getInt("min_salary"),
+	        			rs.getInt("max_salary")
+	            );
+	        }
+	    } catch (SQLException e) {
+	        System.out.println("DB 관련 오류: " + e.getMessage());
+	    } catch (Exception e) {
+	        System.out.println("일반 오류: " + e.getMessage());
+	    } finally {
+	        DB2.close(rs, pstmt, conn);
+	    }
+	    return job;
 	}
 
 	public static void main(String[] args) {
